@@ -106,7 +106,7 @@ class Bn_short_names_ext
 		//check if we're on the publish page
 		if (element('D', $get) == 'cp' && element('C', $get) == 'content_publish' && element('M', $get) == 'entry_form' && element('channel_id', $get))
 		{
-			$this->EE->db->select('channel_fields.field_id AS id, channel_fields.field_name AS name')
+			$this->EE->db->select('channel_fields.field_id AS id, channel_fields.field_name AS name,channel_fields.group_id AS group_id')
 					->from('channel_fields')
 					->join('channels', 'channels.field_group = channel_fields.group_id')
 					->where('channels.channel_id', $this->EE->security->xss_clean(element('channel_id', $get)));
@@ -116,7 +116,7 @@ class Bn_short_names_ext
 			if ($query->num_rows())
 			{
 				$this->EE->load->library('javascript');
-				$output .= '$(function(){$.each('.$this->EE->javascript->generate_json($query->result_array()).',function(i,f){$("#hold_field_"+f.id+" label:first span").append($("<span>{"+f.name+"}</span>").click(function(e){e.stopPropagation();}));});});'."\r\n";
+				$output .= '$(function(){$.each('.$this->EE->javascript->generate_json($query->result_array()).',function(i,f){$("#hold_field_"+f.id+" label:first span").append($("<span>{<a href=\'admin.php?D=cp&C=admin_content&M=field_edit&field_id="+f.id+"&group_id="+f.group_id+"\'>"+f.name+"</a>}</span>").click(function(e){e.stopPropagation();}));});});'."\r\n";
 			}
 		}
 		
